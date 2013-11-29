@@ -8,6 +8,7 @@ var print = function(value, callback) {
     }, 2000);
 };
 
+/*
 async.series([
     print.bind(undefined, "first"),
     print.bind(undefined, "second"),
@@ -23,3 +24,16 @@ async.map(
         console.log(files.join('\n'));
     } 
 );
+*/
+
+var queue = async.queue(function(task, callback) {
+    callback(1, 2, 3, 4, 5);
+    queue.push('queue');
+});
+
+queue.push('queue', function() {
+    var args = Array.prototype.slice.apply(arguments);
+    args.forEach(function(arg) {
+        console.log(arg);
+    });
+});

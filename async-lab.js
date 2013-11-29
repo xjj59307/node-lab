@@ -26,14 +26,16 @@ async.map(
 );
 */
 
-var queue = async.queue(function(task, callback) {
-    callback(1, 2, 3, 4, 5);
-    queue.push('queue');
+var queue = async.queue(function(value, callback) {
+    setTimeout(function() {
+        console.log(value++);
+        if (value < 5) queue.push(value);
+        callback();
+    }, 1000);
 });
 
-queue.push('queue', function() {
-    var args = Array.prototype.slice.apply(arguments);
-    args.forEach(function(arg) {
-        console.log(arg);
-    });
-});
+queue.push(0);
+
+queue.drain = function() {
+    console.log('all items have been processed');
+};
